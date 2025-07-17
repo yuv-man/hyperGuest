@@ -8,4 +8,16 @@ const app = createApp(App)
 
 app.use(router)
 app.use(store)
+
+const userData = localStorage.getItem("user")
+if (userData) {
+	try {
+		const user = JSON.parse(userData)
+		store.dispatch("setUser", user)
+	} catch (error) {
+		console.error("Failed to parse user data from localStorage:", error)
+		localStorage.removeItem("user")
+	}
+}
+
 app.mount("#app")

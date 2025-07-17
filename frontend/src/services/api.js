@@ -1,7 +1,11 @@
 import axios from "axios"
 
 const api = axios.create({
-	baseURL: "http://localhost:3000",
+	baseURL: "/api",
+})
+
+const loginApi = axios.create({
+	baseURL: "/api",
 })
 
 api.interceptors.request.use((config) => {
@@ -39,9 +43,16 @@ const excuteRequest = async (request) => {
 }
 
 export const userApi = {
-	getUsers: async () => excuteRequest(api.get("/api/users")),
-	getUser: async (username) => excuteRequest(api.get(`/api/users/${username}`)),
-	login: async (username) => excuteRequest(api.post(`/api/users/login/${username}`)),
+	getUsers: async () => excuteRequest(api.get("/users")),
+	getUser: async (username) => excuteRequest(api.get(`/users/${username}`)),
+	login: async (username) => {
+		try {
+			const response = await loginApi.post(`/users/login/${username}`)
+			return response
+		} catch (error) {
+			return Promise.reject(error)
+		}
+	},
 	register: async (username, password) =>
-	    excuteRequest(api.post(`/api/users/register`, { username, password })),
+	    excuteRequest(api.post(`/users/register`, { username, password })),
 }
